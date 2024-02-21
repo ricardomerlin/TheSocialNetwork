@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4c5d2a4e18e8
+Revision ID: b109cd778a49
 Revises: 
-Create Date: 2024-02-20 17:33:04.796985
+Create Date: 2024-02-21 02:36:20.640931
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4c5d2a4e18e8'
+revision = 'b109cd778a49'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,15 @@ def upgrade():
     sa.Column('description', sa.String(length=400), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('friend_table',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('date_created', sa.DateTime(), nullable=True),
+    sa.Column('profile_id', sa.Integer(), nullable=False),
+    sa.Column('friend_profile_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['friend_profile_id'], ['profile_table.id'], ),
+    sa.ForeignKeyConstraint(['profile_id'], ['profile_table.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('message_table',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -66,5 +75,6 @@ def downgrade():
     op.drop_table('comment_table')
     op.drop_table('post_table')
     op.drop_table('message_table')
+    op.drop_table('friend_table')
     op.drop_table('profile_table')
     # ### end Alembic commands ###

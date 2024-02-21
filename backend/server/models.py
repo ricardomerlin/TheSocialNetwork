@@ -29,6 +29,21 @@ class Profile(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Profile {self.id}>'
     
+class Friend(db.Model, SerializerMixin):
+    __tablename__ = 'friend_table'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    profile_id = db.Column(db.Integer, ForeignKey('profile_table.id'), nullable=False)
+    friend_profile_id = db.Column(db.Integer, ForeignKey('profile_table.id'), nullable=False)
+
+    profile = db.relationship('Profile', foreign_keys=[profile_id], backref='friend')
+    friend_profile = db.relationship('Profile', foreign_keys=[friend_profile_id], backref='friend')
+
+    def __repr__(self):
+        return f'<Friend {self.id}>'
+    
 
 class Post(db.Model, SerializerMixin):
     __tablename__ = 'post_table'
